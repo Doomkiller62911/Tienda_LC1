@@ -1,11 +1,11 @@
 body {
-    background-color: bisque;
+    background-color: rgb(190, 239, 179);
     font-family: serif;
 }
 
 header {
     position: fixed;
-    background-color: #6666FF;
+    background-color: #07580b;
     top: 0;
     left: 0;
     width: 100%;
@@ -24,7 +24,7 @@ aside {
 }
 section {
     position: fixed;  
-    background-color: #dd8295;
+    background-color: #ffffff;
     top: 110px;
     left: 20%;
     width: 80%;
