@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <!-- Mi primera página html del curso -->
-<html lang="es">
-<head>
-    <title>TechShop</title>
-    <meta charset="UTF-8"/>
-</head>
-<body>
-    <header>
-        <h1>Ejemplo de un index.html</h1>
-    </header>
-    <section>
-        <h2>Esta es la tienda en línea del curso</h2>
-    </section>
-    <footer>
-        Todos los Derechos Reservados TechShop 2026 &COPY;
-    </footer>
-</body>
+<!DOCTYPE html>
+<html lang="es" xml:lang="es"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+
+    <head th:replace="~{general/fragmentos :: head}">
+        <title>Tienda</title>
+    </head>
+    
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"/>
+        
+        <footer th:replace="~{general/fragmentos :: footer}"/>
+    </body>
 </html>
+
+
