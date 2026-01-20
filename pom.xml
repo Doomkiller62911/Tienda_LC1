@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.tienda</groupId>
 	<artifactId>tienda</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<name>tienda</name>
 	<description>Tienda del proyecto en clase</description>
 	<url/>
