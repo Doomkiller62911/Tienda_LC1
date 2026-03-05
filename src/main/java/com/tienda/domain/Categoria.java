@@ -1,6 +1,5 @@
-package com.tienda.domain;
 
-import java.io.Serializable;
+package com.tienda.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,12 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "categoria")
-
 public class Categoria implements Serializable {
 
     // Se recomienda añadir un serialVersionUID

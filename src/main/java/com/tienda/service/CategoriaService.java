@@ -14,7 +14,7 @@ import com.tienda.domain.Categoria;
 import com.tienda.repository.CategoriaRepository;
 
 @Service
-public class CategoryService {
+public class CategoriaService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -39,7 +39,7 @@ public class CategoryService {
     public void save(Categoria categoria, MultipartFile imagenFile) {
         categoriaRepository.save(categoria);
 
-        if (!imagenFile.isEmpty()) { // Si no estÃ¡ vacÃ­o... pasaron una imagen...
+        if (!imagenFile.isEmpty()) { // Si no está vacío... pasaron una imagen...
             try {
                 String rutaImagen = firebaseStorageService.uploadImage(
                         imagenFile,
@@ -51,7 +51,7 @@ public class CategoryService {
                 categoriaRepository.save(categoria);
 
             } catch (IOException e) {
-                // Manejo de excepciÃ³n (no visible en la imagen)
+                // Manejo de excepción (no visible en la imagen)
             }
         }
     }
@@ -59,9 +59,9 @@ public class CategoryService {
     @Transactional
     public void delete(Integer idCategoria) {
 
-        // Verifica si la categorÃ­a existe antes de intentar eliminarlo
+        // Verifica si la categoría existe antes de intentar eliminarlo
         if (!categoriaRepository.existsById(idCategoria)) {
-            // Lanza una excepciÃ³n para indicar que el usuario no fue encontrado
+            // Lanza una excepción para indicar que el usuario no fue encontrado
             throw new IllegalArgumentException(
                     "La categoria con ID " + idCategoria + " no existe."
             );
@@ -70,10 +70,15 @@ public class CategoryService {
         try {
             categoriaRepository.deleteById(idCategoria);
         } catch (DataIntegrityViolationException e) {
-            // Lanza una nueva excepciÃ³n para encapsular el problema de integridad de datos
+            // Lanza una nueva excepción para encapsular el problema de integridad de datos
             throw new IllegalStateException(
                     "No se puede eliminar la categoria. Tiene datos asociados.", e
             );
         }
+    }
+
+    public Object getProductos(boolean b) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProductos'");
     }
 }
