@@ -2,11 +2,14 @@ package com.tienda;
 
 import java.util.Locale;
 
+import org.aspectj.weaver.ast.Var;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import static org.springframework.security.config.web.server.ServerHttpSecurity.http;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +25,10 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import com.tienda.domain.Ruta;
+import com.tienda.service.RutaService;
+
 
 @Configuration
 public class ProjectConfig implements WebMvcConfigurer {
@@ -99,8 +106,23 @@ public class ProjectConfig implements WebMvcConfigurer {
         "/facturar/carrito"
     };
 
+    @Autowired
+    private RutaService rutaService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        Var rutas = RutaService.getRutas();
+        http.authorizeHttpRequests(requests ->{
+            for (Ruta ruta : rutas){
+                if (ruta.isRequiereRol()) {
+                    requests.requestMatchers(ruta.getRuta()).hasRole(ruta.getRol().getRol());
+                } else {
+                    requests.requestMatchers(ruta.getRuta()).permitAll();
+                }
+
+            }
+        }
+
+        }
         http.authorizeHttpRequests(request -> request
                 .requestMatchers(PUBLIC_URLS).permitAll()
                 .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
@@ -126,6 +148,7 @@ public class ProjectConfig implements WebMvcConfigurer {
                 .maxSessionsPreventsLogin(false)
         );
         return http.build();
+
     }
 
     @Bean
