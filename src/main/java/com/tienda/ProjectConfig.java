@@ -1,15 +1,14 @@
 package com.tienda;
 
+import java.util.List;
 import java.util.Locale;
 
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import static org.springframework.security.config.web.server.ServerHttpSecurity.http;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,7 +27,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import com.tienda.domain.Ruta;
 import com.tienda.service.RutaService;
-
 
 @Configuration
 public class ProjectConfig implements WebMvcConfigurer {
@@ -108,47 +106,48 @@ public class ProjectConfig implements WebMvcConfigurer {
 
     @Autowired
     private RutaService rutaService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        Var rutas = RutaService.getRutas();
-        http.authorizeHttpRequests(requests ->{
-            for (Ruta ruta : rutas){
+        List<Ruta> rutas = rutaService.getRutas();
+
+        http.authorizeHttpRequests(requests -> {
+            for (Ruta ruta : rutas) {
                 if (ruta.isRequiereRol()) {
                     requests.requestMatchers(ruta.getRuta()).hasRole(ruta.getRol().getRol());
                 } else {
                     requests.requestMatchers(ruta.getRuta()).permitAll();
                 }
-
             }
-        }
-
-        }
-        http.authorizeHttpRequests(request -> request
-                .requestMatchers(PUBLIC_URLS).permitAll()
-                .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
-                .requestMatchers(ADMIN_OR_VENDEDOR_URLS).hasAnyRole("ADMIN", "VENDEDOR")
-                .requestMatchers(USUARIO_URLS).hasRole("USUARIO")
-                .anyRequest().authenticated()
-        ).formLogin(form -> form // Configuración de formulario de login
+            requests
+                    .requestMatchers(PUBLIC_URLS).permitAll()
+                    .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
+                    .requestMatchers(ADMIN_OR_VENDEDOR_URLS).hasAnyRole("ADMIN", "VENDEDOR")
+                    .requestMatchers(USUARIO_URLS).hasRole("USUARIO")
+                    .anyRequest().authenticated();
+        })
+                .formLogin(form -> form // Configuración de formulario de login
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
                 .permitAll()
-        ).logout(logout -> logout // Configuración de logout
+                )
+                .logout(logout -> logout // Configuración de logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-        ).exceptionHandling(exceptions -> exceptions // Manejo de excepciones
+                )
+                .exceptionHandling(exceptions -> exceptions // Manejo de excepciones
                 .accessDeniedPage("/acceso_denegado")
-        ).sessionManagement(session -> session // Configuración de sesiones
+                )
+                .sessionManagement(session -> session // Configuración de sesiones
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
-        );
+                );
         return http.build();
-
     }
 
     @Bean
